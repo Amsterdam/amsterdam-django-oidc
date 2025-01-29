@@ -21,3 +21,7 @@ django-stubs = {extras = ["compatible-mypy"], version = "^5.1.2"}
 isort = "^6.0.0"
 mypy = "^1.14.1"
 pytest = "^8.3.4"
+
+[tool.isort]
+profile = "black"
+overwrite_in_place = true
