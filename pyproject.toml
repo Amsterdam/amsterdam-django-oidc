@@ -29,3 +29,6 @@ overwrite_in_place = true
 
 [tool.pytest]
 django_find_project = false
+
+[tool.mypy]
+mypy_path = "$MYPY_CONFIG_FILE_DIR/stubs"
