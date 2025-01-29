@@ -96,7 +96,7 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
         access_token: str,
         id_token: Optional[str] = None,
         payload: Optional[dict[str, Any]] = None,
-    ) -> dict[str, Any]:
+    ) -> Payload:
         userinfo = self.verify_token(access_token)
         self.validate_access_token(userinfo)
 
