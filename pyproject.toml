@@ -3,7 +3,8 @@ name = "amsterdam-django-oidc"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Youri Westerman",email = "y.westerman@amsterdam.nl"}
+    {name = "Nino van der Laan",email = "n.van.der.laan@amsterdam.nl"},
+    {name = "Youri Westerman",email = "y.westerman@amsterdam.nl"},
 ]
 readme = "README.md"
 requires-python = ">=3.9"
