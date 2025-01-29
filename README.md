@@ -35,3 +35,24 @@ There are also a few settings required in addition to those of the Mozilla packa
 |------------------------|-----------|------------------------------------------------------------------------------------------------------------------|
 | OIDC_OP_ISSUER         | str       | The allowed issuer, the value of the `iss` claim in the access token must match the value of this setting        |
 | OIDC_TRUSTED_AUDIENCES | list[str] | Audiences that we trust, at least one of the values of the `aud` claim must match one the values of this setting |
+
+# Development
+In order to facilitate further development of this package a containerized setup is provided. 
+
+## Building the container images
+```shell
+docker compose build
+```
+
+## Running development tools
+It's recommended to start a container and use the shell inside the container:
+```shell
+docker compose run --rm amsterdam-django-oidc bash
+```
+Once you see the shell it's possible to run commands like: 
+```shell
+isort .
+black .
+mypy .
+pytest
+```
