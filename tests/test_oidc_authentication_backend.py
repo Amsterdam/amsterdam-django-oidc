@@ -96,7 +96,7 @@ class TestOIDCAuthenticationBackend(TestCase):
             "email": "user@example.com",
         }
 
-        self._authentication_backend.verify_token = Mock()
+        self._authentication_backend.verify_token = Mock()  # type: ignore
         self._authentication_backend.verify_token.return_value = payload
         self._authentication_backend.validate_access_token = Mock()  # type: ignore
 
