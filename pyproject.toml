@@ -1,7 +1,7 @@
 [project]
 name = "amsterdam-django-oidc"
 version = "0.1.0"
-description = ""
+description = "Extension of the authenctication backend of the mozilla-django-oidc package, with extra validation."
 authors = [
     {name = "Nino van der Laan",email = "n.van.der.laan@amsterdam.nl"},
     {name = "Youri Westerman",email = "y.westerman@amsterdam.nl"},
