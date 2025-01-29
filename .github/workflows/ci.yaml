@@ -3,7 +3,7 @@ on:
   pull_request: ~
 
 jobs:
-  isort:
+  pytest:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -34,4 +34,4 @@ jobs:
       - name: Install the project dependencies
         run: poetry install
 
-      - run: poetry run isort . --check-only
+      - run: poetry run pytest -v --cov --cov-fail-under=100
