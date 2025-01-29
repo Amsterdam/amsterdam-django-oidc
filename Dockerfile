@@ -2,6 +2,14 @@ FROM python:3.9
 
 WORKDIR /opt/amsterdam-django-oidc
 
+RUN set -eux; \
+    apt-get update -yqq; \
+    apt-get install -y \
+      spatialite-bin \
+      libsqlite3-mod-spatialite \
+      gdal-bin; \
+    apt-get clean
+
 # Install Poetry
 RUN set eux; \
     curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python; \
@@ -10,7 +18,7 @@ RUN set eux; \
     poetry config virtualenvs.create false; \
     poetry self add poetry-plugin-sort
 
-COPY ./pyproject.toml ./poetry.lock /opt/amsterdam-django-oidc
+COPY ./pyproject.toml ./poetry.lock /opt/amsterdam-django-oidc/
 
 RUN poetry install --no-root
 
