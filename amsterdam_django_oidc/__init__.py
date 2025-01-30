@@ -33,7 +33,7 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
         states that the aud claim will only be a string.
         However, https://openid.net/specs/openid-connect-core-1_0.html#IDToken states that the aud claim can be
         either an array of strings or a single string.
-        https://www.rfc-editor.org/rfc/rfc7519#section-4.1.3 also states that the aud claim can container an array
+        https://www.rfc-editor.org/rfc/rfc7519#section-4.1.3 also states that the aud claim can contain an array
         of strings or a single string.
         https://datatracker.ietf.org/doc/html/rfc9068#section-4-5.4 states:
             The resource server MUST validate that the "aud" claim contains a resource indicator value

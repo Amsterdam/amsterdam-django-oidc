@@ -8,7 +8,7 @@ landscape of applications of the city of Amsterdam. Hence, the reason for this s
 Instead of calling the `userinfo` endpoint, it will validate the aforementioned claims.
 
 # Install
-The package can installed using your favorite package manager for python.
+The package can be installed using your favorite package manager for python.
 For example using poetry:
 ```shell
 poetry add amsterdam-django-oidc
