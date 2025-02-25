@@ -12,6 +12,9 @@ dependencies = [
     "mozilla-django-oidc (>=4.0.1,<5.0.0)"
 ]
 
+[project.urls]
+Repository = "http://github.com/Amsterdam/amsterdam-django-oidc.git"
+
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
