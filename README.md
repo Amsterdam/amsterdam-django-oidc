@@ -31,10 +31,11 @@ AUTHENTICATION_BACKENDS = [
 
 There are also a few settings required in addition to those of the Mozilla package:
 
-| Name                   | Type      | Description                                                                                                      |
-|------------------------|-----------|------------------------------------------------------------------------------------------------------------------|
-| OIDC_OP_ISSUER         | str       | The allowed issuer, the value of the `iss` claim in the access token must match the value of this setting        |
+| Name                   | Type      | Description                                                                                                     |
+|------------------------|-----------|-----------------------------------------------------------------------------------------------------------------|
+| OIDC_OP_ISSUER         | str       | The allowed issuer, the value of the `iss` claim in the access token must match the value of this setting       |
 | OIDC_TRUSTED_AUDIENCES | list[str] | Audiences that we trust, at least one of the values of the `aud` claim must match one the values of this setting |
+| OIDC_VERIFY_AUDIENCE   | bool      | Controls wether or not to verify the `aud` claim, default: `True`                                               |
 
 # Development
 In order to facilitate further development of this package a containerized setup is provided. 
