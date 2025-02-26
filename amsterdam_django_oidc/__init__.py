@@ -41,22 +41,23 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
             MUST be rejected if "aud" does not contain a resource indicator of the current resource server
             as a valid audience.
         Therefor we need to handle both cases."""
-        trusted_audiences = self.get_settings("OIDC_TRUSTED_AUDIENCES", [])
-        audiences = payload.get("aud")
-        if audiences is None:
-            raise SuspiciousOperation("Aud claim missing")
+        if self.get_settings("OIDC_VERIFY_AUDIENCE", True):
+            trusted_audiences = self.get_settings("OIDC_TRUSTED_AUDIENCES", [])
+            audiences = payload.get("aud")
+            if audiences is None:
+                raise SuspiciousOperation("Aud claim missing")
 
-        if isinstance(audiences, str):
-            audiences = [audiences]
+            if isinstance(audiences, str):
+                audiences = [audiences]
 
-        trusted_audience_found = False
-        for audience in audiences:
-            if audience in trusted_audiences:
-                trusted_audience_found = True
-                break
+            trusted_audience_found = False
+            for audience in audiences:
+                if audience in trusted_audiences:
+                    trusted_audience_found = True
+                    break
 
-        if not trusted_audience_found:
-            raise PermissionDenied("No trusted audience found")
+            if not trusted_audience_found:
+                raise PermissionDenied("No trusted audience found")
 
     def validate_expiry(self, payload: Payload) -> None:
         """https://learn.microsoft.com/en-us/entra/identity-platform/access-token-claims-reference#payload-claims

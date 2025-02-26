@@ -46,6 +46,10 @@ class TestOIDCAuthenticationBackend(TestCase):
         with pytest.raises(SuspiciousOperation):
             self._authentication_backend.validate_audience({})  # type: ignore
 
+    @override_settings(OIDC_VERIFY_AUDIENCE=False)
+    def test_skips_audience_validation(self) -> None:
+        self._authentication_backend.validate_audience({"aud": "someone else"})  # type: ignore
+
     def test_validate_valid_expiry(self) -> None:
         hour_from_now = int(time()) + 3600
         self._authentication_backend.validate_expiry({"exp": hour_from_now})  # type: ignore
