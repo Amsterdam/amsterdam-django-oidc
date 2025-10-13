@@ -52,8 +52,7 @@ docker compose run --rm amsterdam-django-oidc bash
 ```
 Once you see the shell it's possible to run commands like: 
 ```shell
-isort .
-black .
-mypy .
-pytest
+uv run ruff check
+uv run mypy .
+uv run pytest
 ```
