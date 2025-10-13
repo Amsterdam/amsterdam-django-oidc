@@ -4,5 +4,11 @@ services:
     build:
       context: .
       dockerfile: Containerfile
+      args:
+        PYTHON_VERSION: ${PYTHON_VERSION:-3.10}
     volumes:
-      - ".:/app"
+      - ".:/app:rw,Z"
+    develop:
+      watch:
+        - action: rebuild
+          path: ./uv.lock
