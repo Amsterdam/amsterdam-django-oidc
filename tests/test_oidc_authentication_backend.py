@@ -19,24 +19,24 @@ class TestOIDCAuthenticationBackend(TestCase):
         self._authentication_backend = OIDCAuthenticationBackend()
 
     def test_validate_valid_issuer(self) -> None:
-        self._authentication_backend.validate_issuer({"iss": "http://localhost:8002/realms/my-realm"})  # type: ignore
+        self._authentication_backend.validate_issuer({"iss": "http://localhost:8002/realms/my-realm"})
 
     def test_validate_invalid_issuer(self) -> None:
         with pytest.raises(PermissionDenied):
-            self._authentication_backend.validate_issuer({"iss": "http://localhost:8002/realms/my-other-realm"})  # type: ignore
+            self._authentication_backend.validate_issuer({"iss": "http://localhost:8002/realms/my-other-realm"})
 
     def test_validate_valid_single_audience(self) -> None:
-        self._authentication_backend.validate_audience({"aud": "me"})  # type: ignore
+        self._authentication_backend.validate_audience({"aud": "me"})
 
     def test_validate_invalid_single_audience(self) -> None:
         with pytest.raises(PermissionDenied):
-            self._authentication_backend.validate_audience({"aud": "someone else"})  # type: ignore
+            self._authentication_backend.validate_audience({"aud": "someone else"})
 
     def test_validate_valid_multiple_audiences(self) -> None:
-        self._authentication_backend.validate_audience({"aud": ["me", "you"]})  # type: ignore
+        self._authentication_backend.validate_audience({"aud": ["me", "you"]})
 
     def test_validate_partially_valid_multiple_audiences(self) -> None:
-        self._authentication_backend.validate_audience({"aud": ["someone else", "you"]})  # type: ignore
+        self._authentication_backend.validate_audience({"aud": ["someone else", "you"]})
 
     def test_validate_invalid_multiple_audiences(self) -> None:
         with pytest.raises(PermissionDenied):
@@ -46,32 +46,32 @@ class TestOIDCAuthenticationBackend(TestCase):
 
     def test_validate_missing_audience(self) -> None:
         with pytest.raises(SuspiciousOperation):
-            self._authentication_backend.validate_audience({})  # type: ignore
+            self._authentication_backend.validate_audience({})
 
     @override_settings(OIDC_VERIFY_AUDIENCE=False)
     def test_skips_audience_validation(self) -> None:
-        self._authentication_backend.validate_audience({"aud": "someone else"})  # type: ignore
+        self._authentication_backend.validate_audience({"aud": "someone else"})
 
     def test_validate_valid_expiry(self) -> None:
         hour_from_now = int(time()) + 3600
-        self._authentication_backend.validate_expiry({"exp": hour_from_now})  # type: ignore
+        self._authentication_backend.validate_expiry({"exp": hour_from_now})
 
     def test_validate_invalid_expiry(self) -> None:
         hour_ago = int(time()) - 3600
         with pytest.raises(PermissionDenied):
-            self._authentication_backend.validate_expiry({"exp": hour_ago})  # type: ignore
+            self._authentication_backend.validate_expiry({"exp": hour_ago})
 
     def test_validate_missing_expiry(self) -> None:
         with pytest.raises(SuspiciousOperation):
-            self._authentication_backend.validate_expiry({})  # type: ignore
+            self._authentication_backend.validate_expiry({})
 
     def test_validate_access_token(self) -> None:
-        self._authentication_backend.validate_issuer = Mock()  # type: ignore
-        self._authentication_backend.validate_audience = Mock()  # type: ignore
-        self._authentication_backend.validate_expiry = Mock()  # type: ignore
-        payload = {}  # type: ignore
+        self._authentication_backend.validate_issuer = Mock()
+        self._authentication_backend.validate_audience = Mock()
+        self._authentication_backend.validate_expiry = Mock()
+        payload = {}
 
-        self._authentication_backend.validate_access_token(payload)  # type: ignore
+        self._authentication_backend.validate_access_token(payload)
 
         self._authentication_backend.validate_issuer.assert_called_once_with(payload)
         self._authentication_backend.validate_audience.assert_called_once_with(payload)
@@ -102,9 +102,9 @@ class TestOIDCAuthenticationBackend(TestCase):
             "email": "user@example.com",
         }
 
-        self._authentication_backend.verify_token = Mock()  # type: ignore
+        self._authentication_backend.verify_token = Mock()
         self._authentication_backend.verify_token.return_value = payload
-        self._authentication_backend.validate_access_token = Mock()  # type: ignore
+        self._authentication_backend.validate_access_token = Mock()
 
         self._authentication_backend.get_userinfo(access_token)
 
