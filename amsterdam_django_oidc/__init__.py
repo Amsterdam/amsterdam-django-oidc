@@ -84,9 +84,8 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
 
         now = time.time()
         if now > expire_time:
-            raise PermissionDenied(
-                "Access-token is expired %r > %r" % (now, expire_time),
-            )
+            msg = f"Access-token is expired {now} > {expire_time}"
+            raise PermissionDenied(msg)
 
     def validate_access_token(self, payload: Payload) -> None:
         self.validate_issuer(payload)
