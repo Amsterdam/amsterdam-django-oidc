@@ -1,5 +1,5 @@
 import time
-from typing import Any, Optional, TypedDict, Union
+from typing import Any, TypedDict
 
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from mozilla_django_oidc.auth import (
@@ -15,31 +15,33 @@ class Payload(TypedDict):
 
 class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
     def validate_issuer(self, payload: Payload) -> None:
-        """https://www.rfc-editor.org/rfc/rfc7519#section-4.1.1 states that the claim will contain a single string.
-        https://learn.microsoft.com/en-us/entra/identity-platform/access-token-claims-reference#payload-claims also
-        states it will contain a single string.
-        https://datatracker.ietf.org/doc/html/rfc9068#section-4-5.3 states that it must match exactly.
+        """https://www.rfc-editor.org/rfc/rfc7519#section-4.1.1 states that the claim
+        will contain a single string.
+        https://learn.microsoft.com/en-us/entra/identity-platform/access-token-claims-reference#payload-claims
+        also states it will contain a single string.
+        https://datatracker.ietf.org/doc/html/rfc9068#section-4-5.3 states that it must
+        match exactly.
         """
         issuer = self.get_settings("OIDC_OP_ISSUER")
         iss = payload.get("iss")
 
         if issuer != iss:
-            raise PermissionDenied(
-                f'"iss": {iss} does not match configured value for OIDC_OP_ISSUER: {issuer}',
-            )
+            msg = (f'"iss": {iss} does not match configured value for OIDC_OP_ISSUER:'
+                   f' {issuer}')
+            raise PermissionDenied(msg)
 
     def validate_audience(self, payload: Payload) -> None:
         """https://learn.microsoft.com/en-us/entra/identity-platform/access-token-claims-reference#payload-claims
         states that the aud claim will only be a string.
-        However, https://openid.net/specs/openid-connect-core-1_0.html#IDToken states that the aud claim can be
-        either an array of strings or a single string.
-        https://www.rfc-editor.org/rfc/rfc7519#section-4.1.3 also states that the aud claim can contain an array
-        of strings or a single string.
+        However, https://openid.net/specs/openid-connect-core-1_0.html#IDToken states
+        that the aud claim can be either an array of strings or a single string.
+        https://www.rfc-editor.org/rfc/rfc7519#section-4.1.3 also states that the aud
+        claim can contain an array of strings or a single string.
         https://datatracker.ietf.org/doc/html/rfc9068#section-4-5.4 states:
-            The resource server MUST validate that the "aud" claim contains a resource indicator value
-            corresponding to an identifier the resource server expects for itself. The JWT access token
-            MUST be rejected if "aud" does not contain a resource indicator of the
-            current resource server as a valid audience.
+            The resource server MUST validate that the "aud" claim contains a resource
+            indicator value corresponding to an identifier the resource server expects
+            for itself. The JWT access token MUST be rejected if "aud" does not contain
+            a resource indicator of the current resource server as a valid audience.
         Therefor we need to handle both cases.
         """
         if self.get_settings("OIDC_VERIFY_AUDIENCE", True):  # noqa: FBT003
