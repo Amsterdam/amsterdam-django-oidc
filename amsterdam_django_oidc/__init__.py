@@ -100,8 +100,8 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
     def get_userinfo(
         self,
         access_token: str,
-        id_token: str | None = None,
-        payload: dict[str, Any] | None = None,
+        id_token: str | None = None,  # noqa: ARG002
+        payload: dict[str, Any] | None = None,  # noqa: ARG002
     ) -> Payload:
         userinfo = self.verify_token(access_token)
         self.validate_access_token(userinfo)
