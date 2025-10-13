@@ -80,7 +80,8 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
         """
         expire_time = payload.get("exp")
         if expire_time is None:
-            raise SuspiciousOperation("Exp claim missing")
+            msg = "Exp claim missing"
+            raise SuspiciousOperation(msg)
 
         now = time.time()
         if now > expire_time:
