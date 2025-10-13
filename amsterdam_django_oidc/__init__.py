@@ -38,15 +38,16 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
         https://datatracker.ietf.org/doc/html/rfc9068#section-4-5.4 states:
             The resource server MUST validate that the "aud" claim contains a resource indicator value
             corresponding to an identifier the resource server expects for itself. The JWT access token
-            MUST be rejected if "aud" does not contain a resource indicator of the current resource server
-            as a valid audience.
+            MUST be rejected if "aud" does not contain a resource indicator of the
+            current resource server as a valid audience.
         Therefor we need to handle both cases.
         """
-        if self.get_settings("OIDC_VERIFY_AUDIENCE", True):
+        if self.get_settings("OIDC_VERIFY_AUDIENCE", True):  # noqa: FBT003
             trusted_audiences = self.get_settings("OIDC_TRUSTED_AUDIENCES", [])
             audiences = payload.get("aud")
             if audiences is None:
-                raise SuspiciousOperation("Aud claim missing")
+                msg = "Aud claim missing"
+                raise SuspiciousOperation(msg)
 
             if isinstance(audiences, str):
                 audiences = [audiences]
@@ -58,7 +59,8 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
                     break
 
             if not trusted_audience_found:
-                raise PermissionDenied("No trusted audience found")
+                msg = "No trusted audience found"
+                raise PermissionDenied(msg)
 
     def validate_expiry(self, payload: Payload) -> None:
         """https://learn.microsoft.com/en-us/entra/identity-platform/access-token-claims-reference#payload-claims
