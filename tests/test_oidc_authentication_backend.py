@@ -52,6 +52,13 @@ class TestOIDCAuthenticationBackend(TestCase):
     def test_skips_audience_validation(self) -> None:
         self._authentication_backend.validate_audience({"aud": "someone else"})  # type: ignore[typeddict-item]
 
+    @override_settings(OIDC_TRUSTED_AUDIENCES=None)
+    def test_raises_when_audience_should_be_verified_but_setting_is_none(self) -> None:
+        with pytest.raises(TypeError) as exception_info:
+            self._authentication_backend.validate_audience({})  # type: ignore[typeddict-item]
+
+        assert str(exception_info.value) == "OIDC_TRUSTED_AUDIENCES must not be None!"
+
     def test_validate_valid_expiry(self) -> None:
         hour_from_now = int(time()) + 3600
         self._authentication_backend.validate_expiry({"exp": hour_from_now})  # type: ignore[typeddict-item]
