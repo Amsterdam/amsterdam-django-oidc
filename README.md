@@ -9,9 +9,9 @@ Instead of calling the `userinfo` endpoint, it will validate the aforementioned 
 
 # Install
 The package can be installed using your favorite package manager for python.
-For example using poetry:
+For example using uv:
 ```shell
-poetry add amsterdam-django-oidc
+uv add amsterdam-django-oidc
 ```
 
 Or using pip:
@@ -52,8 +52,7 @@ docker compose run --rm amsterdam-django-oidc bash
 ```
 Once you see the shell it's possible to run commands like: 
 ```shell
-isort .
-black .
-mypy .
-pytest
+uv run ruff check
+uv run mypy .
+uv run pytest
 ```
