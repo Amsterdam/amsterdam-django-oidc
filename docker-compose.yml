@@ -1,7 +1,0 @@
-services:
-  amsterdam-django-oidc:
-    image: amsterdam/django-oidc
-    build:
-      context: .
-    volumes:
-      - ".:/opt/amsterdam-django-oidc"
