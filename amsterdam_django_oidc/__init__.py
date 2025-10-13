@@ -63,8 +63,8 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
     def validate_expiry(self, payload: Payload) -> None:
         """https://learn.microsoft.com/en-us/entra/identity-platform/access-token-claims-reference#payload-claims
         states that this claim will contain an integer representing a Unix time stamp.
-        https://www.rfc-editor.org/rfc/rfc7519#section-4.1.4 states that the claim will be a number containing
-        a NumericDate value. NumericDate is defined as:
+        https://www.rfc-editor.org/rfc/rfc7519#section-4.1.4 states that the claim will
+        be a number containing a NumericDate value. NumericDate is defined as:
             A JSON numeric value representing the number of seconds from
             1970-01-01T00:00:00Z UTC until the specified UTC date/time,
             ignoring leap seconds. This is equivalent to the IEEE Std 1003.1,
@@ -75,8 +75,8 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
             particular.
         https://datatracker.ietf.org/doc/html/rfc9068#section-4-5.6 states:
             The current time MUST be before the time represented by the "exp" claim.
-            Implementers MAY provide for some small leeway, usually no more than a few minutes,
-            to account for clock skew.
+            Implementers MAY provide for some small leeway, usually no more than a few
+            minutes, to account for clock skew.
         """
         expire_time = payload.get("exp")
         if expire_time is None:
