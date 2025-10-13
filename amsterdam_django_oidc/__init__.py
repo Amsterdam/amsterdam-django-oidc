@@ -9,7 +9,7 @@ from mozilla_django_oidc.auth import (
 
 class Payload(TypedDict):
     iss: str
-    aud: Union[str, list[str]]
+    aud: str | list[str]
     exp: int
 
 
@@ -25,7 +25,7 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
 
         if issuer != iss:
             raise PermissionDenied(
-                f'"iss": {iss} does not match configured value for OIDC_OP_ISSUER: {issuer}'
+                f'"iss": {iss} does not match configured value for OIDC_OP_ISSUER: {issuer}',
             )
 
     def validate_audience(self, payload: Payload) -> None:
@@ -40,7 +40,8 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
             corresponding to an identifier the resource server expects for itself. The JWT access token
             MUST be rejected if "aud" does not contain a resource indicator of the current resource server
             as a valid audience.
-        Therefor we need to handle both cases."""
+        Therefor we need to handle both cases.
+        """
         if self.get_settings("OIDC_VERIFY_AUDIENCE", True):
             trusted_audiences = self.get_settings("OIDC_TRUSTED_AUDIENCES", [])
             audiences = payload.get("aud")
@@ -84,7 +85,7 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
         now = time.time()
         if now > expire_time:
             raise PermissionDenied(
-                "Access-token is expired %r > %r" % (now, expire_time)
+                "Access-token is expired %r > %r" % (now, expire_time),
             )
 
     def validate_access_token(self, payload: Payload) -> None:
@@ -95,8 +96,8 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
     def get_userinfo(
         self,
         access_token: str,
-        id_token: Optional[str] = None,
-        payload: Optional[dict[str, Any]] = None,
+        id_token: str | None = None,
+        payload: dict[str, Any] | None = None,
     ) -> Payload:
         userinfo = self.verify_token(access_token)
         self.validate_access_token(userinfo)

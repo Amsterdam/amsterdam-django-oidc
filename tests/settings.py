@@ -9,7 +9,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.spatialite",
         "NAME": ":memory:",
-    }
+    },
 }
 OIDC_OP_TOKEN_ENDPOINT = (
     "http://keycloak:8002/realms/my-realm/protocol/openid-connect/token"

@@ -108,5 +108,5 @@ class TestOIDCAuthenticationBackend(TestCase):
 
         self._authentication_backend.verify_token.assert_called_once_with(access_token)
         self._authentication_backend.validate_access_token.assert_called_once_with(
-            payload
+            payload,
         )
