@@ -40,7 +40,9 @@ class TestOIDCAuthenticationBackend(TestCase):
 
     def test_validate_invalid_multiple_audiences(self) -> None:
         with pytest.raises(PermissionDenied):
-            self._authentication_backend.validate_audience({"aud": ["someone else", "somebody"]})  # type: ignore
+            self._authentication_backend.validate_audience({
+                "aud": ["someone else", "somebody"],
+            })
 
     def test_validate_missing_audience(self) -> None:
         with pytest.raises(SuspiciousOperation):
