@@ -46,6 +46,10 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
         """
         if self.get_settings("OIDC_VERIFY_AUDIENCE", True):  # noqa: FBT003
             trusted_audiences = self.get_settings("OIDC_TRUSTED_AUDIENCES", [])
+            if trusted_audiences is None:
+                msg = "OIDC_TRUSTED_AUDIENCES must not be None!"
+                raise TypeError(msg)
+
             audiences = payload.get("aud")
             if audiences is None:
                 msg = "Aud claim missing"
