@@ -3,5 +3,6 @@ services:
     image: amsterdam/django-oidc
     build:
       context: .
+      dockerfile: Containerfile
     volumes:
-      - ".:/opt/amsterdam-django-oidc"
+      - ".:/app"
