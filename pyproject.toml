@@ -20,16 +20,18 @@ requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.group.dev.dependencies]
-black = "^25.9.0"
 django-stubs = {extras = ["compatible-mypy"], version = "^5.2.6"}
-isort = "^7.0.0"
 mypy = "^1.14.1"
 pytest = "^8.4.2"
 pytest-cov = "^7.0.0"
+ruff = "^0.14.0"
 
-[tool.isort]
-profile = "black"
-overwrite_in_place = true
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D100", "D101", "D102", "D104", "D205"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105"]
 
 [tool.pytest]
 django_find_project = false
