@@ -109,7 +109,8 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
         id_token: str | None = None,  # noqa: ARG002
         payload: dict[str, Any] | None = None,  # noqa: ARG002
     ) -> Payload:
-        access_token_payload = self._decode_access_token_and_validate_signature(access_token)
+        access_token_payload = (
+            self._decode_access_token_and_validate_signature(access_token))
         self.validate_access_token(access_token_payload)
 
         return access_token_payload
