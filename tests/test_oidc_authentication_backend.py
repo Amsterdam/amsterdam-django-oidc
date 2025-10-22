@@ -3,6 +3,7 @@ from unittest.mock import Mock
 
 import pytest
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
+from django.http.request import HttpRequest
 from django.test import TestCase, override_settings
 
 from amsterdam_django_oidc import OIDCAuthenticationBackend, Payload
@@ -119,3 +120,31 @@ class TestOIDCAuthenticationBackend(TestCase):
         self._authentication_backend.validate_access_token.assert_called_once_with(
             payload,
         )
+
+    def test_nonce_verification(self) -> None:
+        access_token = "access_token"
+        id_token = "id_token"
+        key = "very_special_key_value"
+        nonce = "noncey"
+
+        self._authentication_backend.retrieve_matching_jwk = Mock()
+        self._authentication_backend.retrieve_matching_jwk.return_value = key
+
+        self._authentication_backend.get_token = Mock()
+        self._authentication_backend.get_token.return_value = {
+            "id_token": id_token,
+            "access_token": access_token,
+        }
+
+        self._authentication_backend.get_payload_data = Mock()
+        self._authentication_backend.get_payload_data.return_value = ('{ "nonce": "' + nonce + '" }').encode()
+
+        self._authentication_backend.filter_users_by_claims = Mock()
+
+        request = Mock(HttpRequest)
+        request.GET = { "code": "supersecretcode", "state": "statefulness" }
+        request.session = {}
+
+        self._authentication_backend.authenticate(request, nonce=nonce)
+
+        self._authentication_backend.filter_users_by_claims.assert_called_once()
