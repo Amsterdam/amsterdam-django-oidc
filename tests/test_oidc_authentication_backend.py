@@ -2,6 +2,7 @@ from time import time
 from unittest.mock import Mock
 
 import pytest
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.http.request import HttpRequest
 from django.test import TestCase, override_settings
@@ -137,14 +138,18 @@ class TestOIDCAuthenticationBackend(TestCase):
         }
 
         self._authentication_backend.get_payload_data = Mock()
-        self._authentication_backend.get_payload_data.return_value = ('{ "nonce": "' + nonce + '" }').encode()
+        self._authentication_backend.get_payload_data.return_value = ('{"email": "user@example.com", "exp": 2738142309, "aud": "me", "iss": "http://localhost:8002/realms/my-realm", "nonce": "' + nonce + '"}').encode()
+
+        user = Mock(AbstractBaseUser)
 
         self._authentication_backend.filter_users_by_claims = Mock()
+        self._authentication_backend.filter_users_by_claims.return_value = [user]
 
         request = Mock(HttpRequest)
         request.GET = { "code": "supersecretcode", "state": "statefulness" }
         request.session = {}
 
-        self._authentication_backend.authenticate(request, nonce=nonce)
+        returned_user = self._authentication_backend.authenticate(request, nonce=nonce)
 
         self._authentication_backend.filter_users_by_claims.assert_called_once()
+        self.assertIs(user, returned_user)
