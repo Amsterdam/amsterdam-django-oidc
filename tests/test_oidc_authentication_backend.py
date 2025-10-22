@@ -2,7 +2,9 @@ from time import time
 from unittest.mock import Mock
 
 import pytest
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
+from django.http.request import HttpRequest
 from django.test import TestCase, override_settings
 
 from amsterdam_django_oidc import OIDCAuthenticationBackend, Payload
@@ -109,13 +111,50 @@ class TestOIDCAuthenticationBackend(TestCase):
             "email": "user@example.com",
         }
 
-        self._authentication_backend.verify_token = Mock()  # type: ignore[method-assign]
-        self._authentication_backend.verify_token.return_value = payload
+        self._authentication_backend._decode_access_token_and_validate_signature = (  # type: ignore[method-assign]  # noqa: SLF001
+            Mock())
+        self._authentication_backend._decode_access_token_and_validate_signature.\
+            return_value = payload  # noqa: SLF001
         self._authentication_backend.validate_access_token = Mock()  # type: ignore[method-assign]
 
         self._authentication_backend.get_userinfo(access_token)
 
-        self._authentication_backend.verify_token.assert_called_once_with(access_token)
+        self._authentication_backend._decode_access_token_and_validate_signature.assert_called_once_with(access_token)  # noqa: SLF001
         self._authentication_backend.validate_access_token.assert_called_once_with(
             payload,
         )
+
+    def test_nonce_verification(self) -> None:
+        access_token = "access_token"
+        id_token = "id_token"
+        key = "very_special_key_value"
+        nonce = "noncey"
+
+        self._authentication_backend.retrieve_matching_jwk = Mock()  # type: ignore[method-assign]
+        self._authentication_backend.retrieve_matching_jwk.return_value = key
+
+        self._authentication_backend.get_token = Mock()  # type: ignore[method-assign]
+        self._authentication_backend.get_token.return_value = {
+            "id_token": id_token,
+            "access_token": access_token,
+        }
+
+        self._authentication_backend.get_payload_data = Mock()  # type: ignore[method-assign]
+        json = ('{"email": "user@example.com", "exp": 2738142309, "aud": "me", "iss":'
+                ' "http://localhost:8002/realms/my-realm", "nonce": "' + nonce + '"}'
+                ).encode()
+        self._authentication_backend.get_payload_data.return_value = json
+
+        user = Mock(AbstractBaseUser)
+
+        self._authentication_backend.filter_users_by_claims = Mock()  # type: ignore[method-assign]
+        self._authentication_backend.filter_users_by_claims.return_value = [user]
+
+        request = Mock(HttpRequest)
+        request.GET = { "code": "supersecretcode", "state": "statefulness" }
+        request.session = {}
+
+        returned_user = self._authentication_backend.authenticate(request, nonce=nonce)
+
+        self._authentication_backend.filter_users_by_claims.assert_called_once()
+        self.assertIs(user, returned_user)
