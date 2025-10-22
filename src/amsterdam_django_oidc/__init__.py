@@ -118,7 +118,7 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
         """Based on https://github.com/mozilla/mozilla-django-oidc/blob/2c2334fdc9b2fc72a492b5f0e990b4c30de68363/mozilla_django_oidc/auth.py#L204"""
         token = force_bytes(access_token)
         if self.OIDC_RP_SIGN_ALGO.startswith("RS") or self.OIDC_RP_SIGN_ALGO.startswith(
-            "ES"
+            "ES",
         ):
             if self.OIDC_RP_IDP_SIGN_KEY is not None:
                 key = self.OIDC_RP_IDP_SIGN_KEY
