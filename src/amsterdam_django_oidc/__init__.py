@@ -1,7 +1,9 @@
+import json
 import time
 from typing import Any, TypedDict
 
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
+from django.utils.encoding import force_bytes
 from mozilla_django_oidc.auth import (
     OIDCAuthenticationBackend as MozillaOIDCAuthenticationBackend,
 )
@@ -107,7 +109,24 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
         id_token: str | None = None,  # noqa: ARG002
         payload: dict[str, Any] | None = None,  # noqa: ARG002
     ) -> Payload:
-        userinfo = self.verify_token(access_token)
-        self.validate_access_token(userinfo)
+        access_token_payload = self._decode_access_token_and_validate_signature(access_token)
+        self.validate_access_token(access_token_payload)
 
-        return userinfo
+        return access_token_payload
+
+    def _decode_access_token_and_validate_signature(self, access_token: str) -> Payload:
+        """Based on https://github.com/mozilla/mozilla-django-oidc/blob/2c2334fdc9b2fc72a492b5f0e990b4c30de68363/mozilla_django_oidc/auth.py#L204"""
+        token = force_bytes(access_token)
+        if self.OIDC_RP_SIGN_ALGO.startswith("RS") or self.OIDC_RP_SIGN_ALGO.startswith(
+            "ES"
+        ):
+            if self.OIDC_RP_IDP_SIGN_KEY is not None:
+                key = self.OIDC_RP_IDP_SIGN_KEY
+            else:
+                key = self.retrieve_matching_jwk(token)
+        else:
+            key = self.OIDC_RP_CLIENT_SECRET
+
+        payload_data = self.get_payload_data(token, key)
+
+        return json.loads(payload_data)
