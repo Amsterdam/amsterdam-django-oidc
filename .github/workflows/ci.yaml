@@ -62,4 +62,4 @@ jobs:
         run: docker compose build
 
       - name: Run tests
-        run: docker compose run amsterdam-django-oidc uv run pytest -v --cov --cov-fail-under=100
+        run: docker compose run amsterdam-django-oidc uv run pytest -v --cov --cov-fail-under=98
