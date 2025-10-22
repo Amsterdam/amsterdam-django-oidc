@@ -128,16 +128,16 @@ class TestOIDCAuthenticationBackend(TestCase):
         key = "very_special_key_value"
         nonce = "noncey"
 
-        self._authentication_backend.retrieve_matching_jwk = Mock()
+        self._authentication_backend.retrieve_matching_jwk = Mock()  # type: ignore[method-assign]
         self._authentication_backend.retrieve_matching_jwk.return_value = key
 
-        self._authentication_backend.get_token = Mock()
+        self._authentication_backend.get_token = Mock()  # type: ignore[method-assign]
         self._authentication_backend.get_token.return_value = {
             "id_token": id_token,
             "access_token": access_token,
         }
 
-        self._authentication_backend.get_payload_data = Mock()
+        self._authentication_backend.get_payload_data = Mock()  # type: ignore[method-assign]
         json = ('{"email": "user@example.com", "exp": 2738142309, "aud": "me", "iss":'
                 ' "http://localhost:8002/realms/my-realm", "nonce": "' + nonce + '"}'
                 ).encode()
@@ -145,7 +145,7 @@ class TestOIDCAuthenticationBackend(TestCase):
 
         user = Mock(AbstractBaseUser)
 
-        self._authentication_backend.filter_users_by_claims = Mock()
+        self._authentication_backend.filter_users_by_claims = Mock()  # type: ignore[method-assign]
         self._authentication_backend.filter_users_by_claims.return_value = [user]
 
         request = Mock(HttpRequest)
