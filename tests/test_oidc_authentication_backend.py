@@ -111,13 +111,15 @@ class TestOIDCAuthenticationBackend(TestCase):
             "email": "user@example.com",
         }
 
-        self._authentication_backend.verify_token = Mock()  # type: ignore[method-assign]
-        self._authentication_backend.verify_token.return_value = payload
+        self._authentication_backend._decode_access_token_and_validate_signature = (  # type: ignore[method-assign]  # noqa: SLF001
+            Mock())
+        self._authentication_backend._decode_access_token_and_validate_signature.\
+            return_value = payload  # noqa: SLF001
         self._authentication_backend.validate_access_token = Mock()  # type: ignore[method-assign]
 
         self._authentication_backend.get_userinfo(access_token)
 
-        self._authentication_backend.verify_token.assert_called_once_with(access_token)
+        self._authentication_backend._decode_access_token_and_validate_signature.assert_called_once_with(access_token)  # noqa: SLF001
         self._authentication_backend.validate_access_token.assert_called_once_with(
             payload,
         )
