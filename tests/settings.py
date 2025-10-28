@@ -1,5 +1,6 @@
 SECRET_KEY = "fake-key"
 USE_TZ = False
+ROOT_URLCONF="tests.urls"
 INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -23,3 +24,4 @@ OIDC_RP_SIGN_ALGO = "RS256"
 OIDC_OP_JWKS_ENDPOINT = (
     "http://keycloak:8002/realms/my-realm/protocol/openid-connect/certs"
 )
+OIDC_AUTHENTICATION_CALLBACK_URL = "index"
