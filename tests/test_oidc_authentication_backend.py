@@ -140,10 +140,14 @@ class TestOIDCAuthenticationBackend(TestCase):
         }
 
         self._authentication_backend.get_payload_data = Mock()  # type: ignore[method-assign]
-        json = ('{"email": "user@example.com", "exp": 2738142309, "aud": "me", "iss":'
-                ' "http://localhost:8002/realms/my-realm", "nonce": "' + nonce + '"}'
-                ).encode()
-        self._authentication_backend.get_payload_data.return_value = json
+        data = {
+            "email": "user@example.com",
+            "exp": 2738142309,
+            "aud": "me",
+            "iss": "http://localhost:8002/realms/my-realm",
+            "nonce": nonce,
+        }
+        self._authentication_backend.get_payload_data.return_value = data
 
         user = Mock(AbstractBaseUser)
 
