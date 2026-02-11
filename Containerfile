@@ -1,5 +1,5 @@
 ARG PYTHON_VERSION
-FROM ghcr.io/astral-sh/uv:0.9-python${PYTHON_VERSION:-3.10}-trixie-slim
+FROM ghcr.io/astral-sh/uv:0.10-python${PYTHON_VERSION:-3.10}-trixie-slim
 
 RUN set -eux; \
     apt-get update -yqq; \
